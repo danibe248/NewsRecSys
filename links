@@ -1,0 +1,23 @@
+http://makble.com/what-is-term-vector-in-lucene
+https://lucene.apache.org/solr/guide/6_6/the-term-vector-component.html
+
+https://stackoverflow.com/questions/20575254/lucene-4-4-how-to-get-term-frequency-over-all-index
+https://stackoverflow.com/questions/28244961/lucene-4-10-2-calculate-tf-idf-for-all-terms-in-index
+https://stackoverflow.com/questions/1844194/get-cosine-similarity-between-two-documents-in-lucene
+
+ # morelikethis
+http://lucene.apache.org/core/7_2_0/queries/org/apache/lucene/queries/mlt/MoreLikeThis.html
+http://doduck.com/lucene-morelikethis-java-example/
+https://github.com/martin-magakian/Lucene-MoreLikeThis-example
+
+ # twitter
+https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html
+https://linuxhint.com/twitter4j-tutorial/
+https://developer.twitter.com/en/docs/tweets/rules-and-filtering/overview/standard-operators
+
+https://newsapi.org/
+https://twitter.com/newsapiorg -- c4f289fb78d74f0398794b74a9bb0b30
+
+ # pitone
+https://stackabuse.com/accessing-the-twitter-api-with-python/
+ 
