@@ -119,30 +119,30 @@ public class Prog {
 			System.out.println(term.utf8ToString());
 		}
 		
-//		IndexSearcher searcher = new IndexSearcher(reader);
-//		searcher.setSimilarity(new ClassicSimilarity());
-//		QueryParser parser_title = new QueryParser("Review", analyzer);
-//		Query qt = parser_title.parse("germany dreadnought history");
-//		QueryParser parser_author = new QueryParser("Author", analyzer);
-//		Query qa = parser_author.parse("Isaac");
-//		
-//		BooleanQuery finalQuery = new BooleanQuery.Builder().add(qt, Occur.MUST).add(qa, Occur.MUST).build();
-//		TopDocs topdocs = searcher.search(qt, 100);
-//		ScoreDoc[] resultsList = topdocs.scoreDocs;
-//		System.out.println(resultsList.length);
-//		for(int i = 0; i<resultsList.length; i++){
-//			Document book = searcher.doc(resultsList[i].doc);
-//			
-//			String author= book.getField("Author").stringValue();
-//			System.out.println(author);
-//			
-//			String title= book.getField("Title").stringValue();
-//			System.out.println(title);
-//			
-//			String review= book.getField("Review").stringValue();
-//			System.out.println(review);
-//			System.out.println("==============================");
-//		}
+		IndexSearcher searcher = new IndexSearcher(reader);
+		searcher.setSimilarity(new ClassicSimilarity());
+		QueryParser parser_title = new QueryParser("Review", analyzer);
+		Query qt = parser_title.parse("germany dreadnought history");
+		QueryParser parser_author = new QueryParser("Author", analyzer);
+		Query qa = parser_author.parse("Isaac");
+		
+		BooleanQuery finalQuery = new BooleanQuery.Builder().add(qt, Occur.MUST).add(qa, Occur.MUST).build();
+		TopDocs topdocs = searcher.search(qt, 100);
+		ScoreDoc[] resultsList = topdocs.scoreDocs;
+		System.out.println(resultsList.length);
+		for(int i = 0; i<resultsList.length; i++){
+			Document book = searcher.doc(resultsList[i].doc);
+			
+			String author= book.getField("Author").stringValue();
+			System.out.println(author);
+			
+			String title= book.getField("Title").stringValue();
+			System.out.println(title);
+			
+			String review= book.getField("Review").stringValue();
+			System.out.println(review);
+			System.out.println("==============================");
+		}
 		
 		FileUtils.cleanDirectory(new File(ix)); 
 	}

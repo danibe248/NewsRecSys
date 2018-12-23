@@ -1,0 +1,19 @@
+User()
+	id = [0-9]
+	interests = []
+	Document[] user_profile_docs = []
+	
+	getUserProfile()
+	getUserProfile(int cat)
+	setUserProfile(String[] up)
+	getInterest()
+	setInterest()
+	update(String tweet)
+
+IndexCreator()
+
+Recommender()
+	Path indice
+	
+	raccomanda(Utente u, int idCategoria)
+	

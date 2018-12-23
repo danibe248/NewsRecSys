@@ -33,16 +33,16 @@ public class Scrappy {
 //		  .setOAuthAccessTokenSecret("lLGiQZONBEVsHfSV3zom1CWSMFbybuhSxwCPKVpjifJN9");
 
 	    Twitter twitter = TwitterFactory.getSingleton();
-	    twitter.setOAuthConsumer("+++++++++++++++++++++++++", "++++++++++++++++++++++++++++++++++++++++++++++++");
-	    twitter.setOAuthAccessToken(new AccessToken("++++++++++++++++++-+++++++++++++++++++++++++++++++","++++++++++++++++++++++++++++++++++++++++++++"));
+	    twitter.setOAuthConsumer("4AN4RwecyFqXyAYdF6aB1wsZ7", "agrWdgv8ObHLi106znh4vCr448P4akHTd4KrOY6uTR2AebmArx");
+	    twitter.setOAuthAccessToken(new AccessToken("702181802253881344-GjAtl4ZkdHZbDLtdsyXVjDvmwuawxNr","lLGiQZONBEVsHfSV3zom1CWSMFbybuhSxwCPKVpjifJN9"));
 	    
 	    ArrayList<String> links = new ArrayList<String>();
 	    
-	    Query query = new Query("from:sole24ore -filter:retweets -filter:video since:2018-12-20");
+	    Query query = new Query("from:myanimelist -filter:retweets -filter:video since:2018-12-17");
 	    QueryResult result = twitter.search(query);
 	    for (Status status : result.getTweets()) {
 	    	for(URLEntity urle : status.getURLEntities()) {
-	    		System.out.println(urle.toString());
+	    		//System.out.println(urle.toString());
 	    		links.add(urle.getExpandedURL());
 	    	}
 	        String fmt = "@" + status.getUser().getScreenName() + " - " + status.getText();
@@ -62,7 +62,7 @@ public class Scrappy {
 	        br = new BufferedReader(new InputStreamReader(is));
 
 	        while ((line = br.readLine()) != null) {
-	            System.out.println(line);
+//	            System.out.println(line);
 	        }
 	    } catch (MalformedURLException mue) {
 	        System.out.println("MalformedURLException");
