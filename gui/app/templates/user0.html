@@ -4,9 +4,24 @@
 <div id="jumbo" class="jumbotron">
   <h1>The User {{ack["id"]}} page</h1>
   <p class="lead">The answer is {{ack["ack"]}}</p>
+  <div class="row">
+	<div class="col-md-12 text-center">
+		<div class="btn-group">
+			<a href="/user?update=1&id={{ack['id']}}&category=allin" type="button" class="btn btn-primary">All in</a>
+			<a href="/user?update=1&id={{ack['id']}}&category=cat1" type="button" class="btn btn-primary">Category 1</a>
+			<a href="/user?update=1&id={{ack['id']}}&category=cat2" type="button" class="btn btn-primary">Category 2</a>
+			<a href="/user?update=1&id={{ack['id']}}&category=cat3" type="button" class="btn btn-primary">Category 3</a>
+			<a href="/user?update=1&id={{ack['id']}}&category=cat4" type="button" class="btn btn-primary">Category 4</a>
+			<a href="/user?update=1&id={{ack['id']}}&category=cat5" type="button" class="btn btn-primary">Category 5</a>
+		</div> 
+	</div>
+  </div>
+  <br>
+  <br>
   <div class="list-group">
 	{%for element in ack["lista"] %}
-	  <a onclick="getladata()" class="list-group-item">{{element}}</a>
+	  <!-- <a onclick="getladata()" class="list-group-item">{{element}}</a> -->
+	  <a href="/user?update=1&id={{ack['id']}}" class="list-group-item">{{element}}</a>
 	{%endfor%}
   </div>
 </div>
