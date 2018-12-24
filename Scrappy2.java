@@ -44,7 +44,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>sport</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -59,7 +59,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>tech</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -74,7 +74,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>cars</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -89,7 +89,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>archi</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -104,7 +104,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>anime</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -119,7 +119,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>anime</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -133,7 +133,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>weather</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();
@@ -147,7 +147,7 @@ public class Scrappy2 {
 			out.println("<oggetto>\n");
 			out.println("<data>" + dateFormat.format(status.getCreatedAt()) + "</data>");
 			out.println("<categoria>hiphop</categoria>");
-			out.println("<tweet>" + status.getText() + "</tweet>");
+			out.println("<tweet>" + status.getText().replaceAll("&", "&amp;") + "</tweet>");
 			out.println("<articolo>null</articolo>");
 			out.println("</oggetto>\n");
 			out.close();

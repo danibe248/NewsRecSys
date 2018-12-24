@@ -64,6 +64,10 @@ public class User {
 		}
 	}
 	
+	public void upUpdate(Document d) {
+		this.user_profile.add(d);		
+	}
+	
 	public void setUser_profile(ArrayList<Document> user_profile) {
 		this.user_profile = user_profile;
 	}

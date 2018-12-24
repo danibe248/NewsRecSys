@@ -30,6 +30,7 @@ public class Main {
 		categories.put(4, "sport");
 		categories.put(5, "tech");
 		categories.put(6, "weather");
+		
 		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
 		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
 		Indexer creator = new Indexer(datapath, ixpath);
@@ -54,11 +55,40 @@ public class Main {
 		User u7 = new User(7,7,30,searcher,categories);
 		User u8 = new User(8,7,30,searcher,categories);
 		User u9 = new User(9,7,30,searcher,categories);
-		ArrayList<Document> up1 = u1.getUser_profile("weather");
+		ArrayList<Document> up1 = u1.getUser_profile("allin");
 		System.out.println(up1.size());
 		for (Document d : up1) {
 			System.out.print(d.get("Category") + " ");
-			System.out.println(d.get("Tweet"));
+			System.out.println(d.get("Id"));
+		}
+		
+		System.out.println("##################################");
+		System.out.println("#        Recommendations         #");
+		System.out.println("##################################");
+		
+		Recommender engine = new Recommender(reader);
+		engine.recommend(u1, "archi");
+		ArrayList<Document> recommendations = engine.getResults();
+		ArrayList<Float> scores = engine.getScores();
+		
+		int count = 0;
+		for (Document d : recommendations) {
+			System.out.println(d.get("Category") + " " + d.get("Id") + " " + scores.get(count));
+			count++;
+		}
+		
+		System.out.println("##################################");
+		System.out.println("#        Recommendations         #");
+		System.out.println("##################################");
+		
+		engine.recommend(u1, "allin");
+		recommendations = engine.getResults();
+		scores = engine.getScores();
+		
+		count = 0;
+		for (Document d : recommendations) {
+			System.out.println(d.get("Category") + " " + d.get("Id") + " " + scores.get(count));
+			count++;
 		}
 		int e = 8/0;
 		
