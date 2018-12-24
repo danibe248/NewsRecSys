@@ -7,9 +7,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.util.BytesRef;
 import org.json.JSONArray;
@@ -17,19 +21,47 @@ import org.json.JSONObject;
 
 public class Main {
 
-	public static void main(String[] args) throws ClassNotFoundException, IOException, IndexAlreadyPresentException {
-//		Indexer creator = new Indexer("/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets", "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix");
-//		IndexReader reader = creator.createIndex();
-//		IndexSearcher searcher = new IndexSearcher(reader);
-//		System.out.println(searcher.doc(0).getField("Id"));
-//		System.out.println(creator.getDocs().size());
-//		
-//		TermsEnum tv = reader.getTermVector(0, "Tweet").iterator();
-//		BytesRef term = null;
-//		while ((term = tv.next()) != null) {
-//			System.out.println(term.utf8ToString());
-//		}
-//		int e = 8/0;
+	public static void main(String[] args) throws ClassNotFoundException, IOException, IndexAlreadyPresentException, ParseException, CategoryNotFoundException {
+		Map<Integer,String> categories = new HashMap<Integer, String>();
+		categories.put(0, "anime");
+		categories.put(1, "archi");
+		categories.put(2, "cars");
+		categories.put(3, "hiphop");
+		categories.put(4, "sport");
+		categories.put(5, "tech");
+		categories.put(6, "weather");
+		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
+		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
+		Indexer creator = new Indexer(datapath, ixpath);
+		IndexReader reader = creator.createIndex();
+		IndexSearcher searcher = new IndexSearcher(reader);
+		System.out.println(searcher.doc(0).getField("Id"));
+		System.out.println(creator.getDocs().size());
+		
+		TermsEnum tv = reader.getTermVector(0, "Tweet").iterator();
+		BytesRef term = null;
+		while ((term = tv.next()) != null) {
+			System.out.println(term.utf8ToString());
+		}
+ 
+		User u0 = new User(0,7,30,searcher,categories);
+		User u1 = new User(1,7,30,searcher,categories);
+		User u2 = new User(2,7,30,searcher,categories);
+		User u3 = new User(3,7,30,searcher,categories);
+		User u4 = new User(4,7,30,searcher,categories);
+		User u5 = new User(5,7,30,searcher,categories);
+		User u6 = new User(6,7,30,searcher,categories);
+		User u7 = new User(7,7,30,searcher,categories);
+		User u8 = new User(8,7,30,searcher,categories);
+		User u9 = new User(9,7,30,searcher,categories);
+		ArrayList<Document> up1 = u1.getUser_profile("weather");
+		System.out.println(up1.size());
+		for (Document d : up1) {
+			System.out.print(d.get("Category") + " ");
+			System.out.println(d.get("Tweet"));
+		}
+		int e = 8/0;
+		
 		DataInputStream is;
 		DataOutputStream os;
 		System.out.println("Waiting for you...");
