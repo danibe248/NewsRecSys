@@ -10,10 +10,13 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 
 public class Recommender {
@@ -72,7 +75,8 @@ public class Recommender {
 	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
 	            .build();
 		
-		QueryParser parser_title = new QueryParser("Tweet", analyzer);
+		QueryParser parser_tweet = new QueryParser("Tweet", analyzer);
+		QueryParser parser_id = new QueryParser("Id", analyzer);
 		IndexSearcher searcher = new IndexSearcher(reader);
 		searcher.setSimilarity(new ClassicSimilarity());
 		ArrayList<Document> documents = u.getUser_profile(cat);
@@ -88,11 +92,26 @@ public class Recommender {
         str = str.replaceAll("((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)", " ");
         str = str.replaceAll("[^a-zA-Z ]", " ");
   
+        Iterator<Document> up_documents = documents.iterator();
+        Builder finalQueryBuilder = new BooleanQuery.Builder();
+        while (up_documents.hasNext()) {
+        	Document current_doc = up_documents.next();
+        	Query current_q = parser_id.parse(current_doc.get("Id"));
+        	finalQueryBuilder.add(current_q,Occur.MUST_NOT);
+        }
         
-        Query qt = parser_title.parse(str);
-        TopDocs topdocs = searcher.search(qt, 50);
+        Query qt = parser_tweet.parse(str);
+        finalQueryBuilder.add(qt,Occur.SHOULD);
+        BooleanQuery finalQuery = finalQueryBuilder.build();
+        TopDocs topdocs = searcher.search(finalQuery, 10);
         ScoreDoc[] resultsList = topdocs.scoreDocs;
         
+        
+        for(int i = 0; i<resultsList.length; i++){
+        	results.add(searcher.doc(resultsList[i].doc));
+    		scores.add(resultsList[i].score);
+        }
+/*        
         for(int i = 0; i<resultsList.length; i++){
         	String current = searcher.doc(resultsList[i].doc).get("Id");
         	Iterator<Document> up_documents = documents.iterator();
@@ -108,8 +127,7 @@ public class Recommender {
         		scores.add(resultsList[i].score);
         	}
         }
-        	
+*/        	
 //        return results;		
-	}
-	
+	}	
 }

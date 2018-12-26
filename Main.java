@@ -67,7 +67,7 @@ public class Main {
 		System.out.println("##################################");
 		
 		Recommender engine = new Recommender(reader);
-		engine.recommend(u1, "archi");
+		engine.recommend(u1, "hiphop");
 		ArrayList<Document> recommendations = engine.getResults();
 		ArrayList<Float> scores = engine.getScores();
 		
