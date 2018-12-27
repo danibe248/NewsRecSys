@@ -14,7 +14,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexReader;
@@ -59,6 +58,7 @@ public class Indexer {
 	}
 	
 	public IndexReader createIndex() throws IOException, IndexAlreadyPresentException {
+		String os = System.getProperty("os.name").toLowerCase().split(" ")[0];
 		if (Files.walk(Paths.get(this.indexpath)).filter(Files::isRegularFile).iterator().hasNext()) {
 			throw new IndexAlreadyPresentException("Delete previous index");
 //			FileUtils.cleanDirectory(new File(this.indexpath));
@@ -89,7 +89,12 @@ public class Indexer {
 //				System.out.println("Article: "+doc.getElementsByTagName("articolo").item(0).getTextContent());
 				
 				Document doc1 = new Document();
-				String[] splitted_path = current.toString().split("/");
+				String[] splitted_path;
+				if (os.equals("windows")) {
+					splitted_path = current.toString().split("\\\\");
+				} else {
+					splitted_path = current.toString().split("/");
+				}
 				String filename = splitted_path[splitted_path.length-1];
 				String[] splitted_filename = filename.split("\\.");
 				
