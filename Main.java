@@ -33,6 +33,7 @@ public class Main {
 		
 		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
 		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
+		String tmpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix_tmp";
 		Indexer creator = new Indexer(datapath, ixpath);
 		IndexReader reader = creator.createIndex();
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -46,7 +47,7 @@ public class Main {
 		}
  
 		User u0 = new User(0,7,30,searcher,categories);
-		User u1 = new User(1,7,30,searcher,categories);
+		User u1 = new User(1,7,50,searcher,categories);
 		User u2 = new User(2,7,30,searcher,categories);
 		User u3 = new User(3,7,30,searcher,categories);
 		User u4 = new User(4,7,30,searcher,categories);
@@ -67,7 +68,7 @@ public class Main {
 		System.out.println("##################################");
 		
 		Recommender engine = new Recommender(reader);
-		engine.recommend(u1, "hiphop");
+		engine.recommend(u1, "hiphop;anime");
 		ArrayList<Document> recommendations = engine.getResults();
 		ArrayList<Float> scores = engine.getScores();
 		
@@ -90,6 +91,8 @@ public class Main {
 			System.out.println(d.get("Category") + " " + d.get("Id") + " " + scores.get(count));
 			count++;
 		}
+		
+		System.out.println(u1.getBOW(ixpath, tmpath, 20));
 		int e = 8/0;
 		
 		DataInputStream is;

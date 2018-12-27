@@ -1,18 +1,39 @@
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.TFIDFSimilarity;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
+
 
 public class User {
 	private int id;
@@ -46,19 +67,59 @@ public class User {
 		return user_profile;
 	}
 
-	public ArrayList<Document> getUser_profile(String cat) throws CategoryNotFoundException {
-		if (cat.equals("anime") | cat.equals("tech") | cat.equals("cars") | cat.equals("archi") | 
-				cat.equals("sport") | cat.equals("weather") | cat.equals("hiphop")) {
-			ArrayList<Document> filtered_profile = new ArrayList<Document>();
+//  vecchio user profile 
+//	public ArrayList<Document> getUser_profile(String cat) throws CategoryNotFoundException {
+//		if (cat.equals("anime") | cat.equals("tech") | cat.equals("cars") | cat.equals("archi") | 
+//				cat.equals("sport") | cat.equals("weather") | cat.equals("hiphop")) {
+//			ArrayList<Document> filtered_profile = new ArrayList<Document>();
+//
+//			for (Document d : user_profile) {
+//				if (d.get("Category").equals(cat)) {
+//					filtered_profile.add(d);
+//				}
+//			}
+//			return filtered_profile;
+//		} else if (cat.equals("allin")) {
+//			return user_profile;
+//		} else {
+//			throw new CategoryNotFoundException();
+//		}
+//	}
 
-			for (Document d : user_profile) {
-				if (d.get("Category").equals(cat)) {
-					filtered_profile.add(d);
+	public ArrayList<Document> getUser_profile(String cat) throws CategoryNotFoundException {
+		String[] cats = cat.split(";");
+		if (cats.length == 1) {
+			if (cat.equals("anime") | cat.equals("tech") | cat.equals("cars") | cat.equals("archi") | 
+					cat.equals("sport") | cat.equals("weather") | cat.equals("hiphop")) {
+				ArrayList<Document> filtered_profile = new ArrayList<Document>();
+	
+				for (Document d : user_profile) {
+					if (d.get("Category").equals(cat)) {
+						filtered_profile.add(d);
+					}
+				}
+				return filtered_profile;
+			} else if (cat.equals("allin")) {
+				return user_profile;
+			} else {
+				throw new CategoryNotFoundException();
+			}
+		} else if (cats.length > 1) {
+			ArrayList<Document> filtered_profile = new ArrayList<Document>();
+			for (String c : cats) {
+				if (c.equals("anime") | c.equals("tech") | c.equals("cars") | c.equals("archi") | 
+						c.equals("sport") | c.equals("weather") | c.equals("hiphop")) {
+		
+					for (Document d : user_profile) {
+						if (d.get("Category").equals(c)) {
+							filtered_profile.add(d);
+						}
+					}
+				} else {
+					throw new CategoryNotFoundException();
 				}
 			}
 			return filtered_profile;
-		} else if (cat.equals("allin")) {
-			return user_profile;
 		} else {
 			throw new CategoryNotFoundException();
 		}
@@ -70,6 +131,73 @@ public class User {
 	
 	public void setUser_profile(ArrayList<Document> user_profile) {
 		this.user_profile = user_profile;
+	}
+	
+	public String getBOW(String ixpath, String tmpath, int nterms) throws IOException {
+		FileUtils.cleanDirectory(new File(tmpath));
+		Analyzer analyzer = CustomAnalyzer.builder()
+				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+	            .withTokenizer("whitespace")
+	            .addTokenFilter("lowercase")
+	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+	            .build();
+		
+		Path ipath = Paths.get(tmpath);
+		Directory directory = FSDirectory.open(ipath);
+		IndexWriterConfig config = new IndexWriterConfig(analyzer);
+		TFIDFSimilarity sim = new ClassicSimilarity();
+		config.setSimilarity(sim);
+		IndexWriter iwriter = new IndexWriter(directory, config);
+		
+		for (Document d: user_profile) {
+			iwriter.addDocument(d);
+		}
+		iwriter.close();
+		
+		IndexReader reader = DirectoryReader.open(directory);
+		IndexReader reader_collection = DirectoryReader.open(FSDirectory.open(Paths.get(ixpath)));
+		HashMap<String, SortedSet<String>> bows = new HashMap<String, SortedSet<String>>();
+		Map<String,TopTerms> categories = new HashMap<String, TopTerms>();
+		categories.put("anime", new TopTerms(nterms));
+		categories.put("archi",new TopTerms(nterms));
+		categories.put("cars", new TopTerms(nterms));
+		categories.put("hiphop", new TopTerms(nterms));
+		categories.put("sport", new TopTerms(nterms));
+		categories.put("tech", new TopTerms(nterms));
+		categories.put("weather", new TopTerms(nterms));
+		
+		for (int id_doc = 0; id_doc < reader.maxDoc(); id_doc++) {
+			String cat = reader.document(id_doc).get("Category");
+			
+//			TopTerms tt = new TopTerms(20);
+			try {
+				TermsEnum it = reader.getTermVector(id_doc, "Tweet").iterator();
+				System.out.println(cat);
+				BytesRef term = null;
+				while ((term = it.next()) != null) {
+					float idf = sim.idf(reader_collection.docFreq(new Term("Tweet", term.utf8ToString())),reader_collection.numDocs());
+					float tf = sim.tf(it.totalTermFreq());
+					TermTFIDF newterm = new TermTFIDF(tf * idf, term.utf8ToString());
+					categories.get(cat).add(newterm);
+					System.out.println(newterm.term + ":" + newterm.tfidf);
+				}
+			} catch(Exception e) {
+				System.out.println("Eccezione sulla creazione bow");
+			}
+		}
+		Iterator<String> catit = categories.keySet().iterator();
+		String currentcat;
+		while (catit.hasNext()) {
+			currentcat = catit.next();
+			TreeSet<String> tmpSet = new TreeSet<String>();
+			for (TermTFIDF ttf : categories.get(currentcat).top) {
+				tmpSet.add(ttf.term);
+			}
+			bows.put(currentcat, tmpSet);
+		}
+		return bows.toString();
 	}
 	
 	private int[] generateDocCounts(int count, int init) {

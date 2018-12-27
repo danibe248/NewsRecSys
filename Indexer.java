@@ -107,6 +107,8 @@ public class Indexer {
 		
 		Analyzer analyzer = CustomAnalyzer.builder()
 	            .addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				//.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+				//.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
 	            .withTokenizer("whitespace")
 	            .addTokenFilter("lowercase")
 	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")

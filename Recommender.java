@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -53,7 +54,7 @@ public class Recommender {
 		this.reader = reader;
 	}
 
-	private String removeUrl(String input_str)     {
+	private String removeUrl(String input_str) {
         String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
         Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(input_str);
@@ -69,14 +70,16 @@ public class Recommender {
 		results.clear();
 		scores.clear();
 		Analyzer analyzer = CustomAnalyzer.builder()
-	            .addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
 	            .withTokenizer("whitespace")
 	            .addTokenFilter("lowercase")
 	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
 	            .build();
 		
 		QueryParser parser_tweet = new QueryParser("Tweet", analyzer);
-		QueryParser parser_id = new QueryParser("Id", analyzer);
+		QueryParser parser_id = new QueryParser("Id", new StandardAnalyzer());
 		IndexSearcher searcher = new IndexSearcher(reader);
 		searcher.setSimilarity(new ClassicSimilarity());
 		ArrayList<Document> documents = u.getUser_profile(cat);
