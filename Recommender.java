@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
@@ -54,17 +52,17 @@ public class Recommender {
 		this.reader = reader;
 	}
 
-	private String removeUrl(String input_str) {
-        String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
-        Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(input_str);
-        int i = 0;
-        while (m.find()) {
-            input_str = input_str.replaceAll(m.group(i),"").trim();
-            i++;
-        }
-        return input_str;
-    }
+//	private String removeUrl(String input_str) {
+//        String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+//        Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
+//        Matcher m = p.matcher(input_str);
+//        int i = 0;
+//        while (m.find()) {
+//            input_str = input_str.replaceAll(m.group(i),"").trim();
+//            i++;
+//        }
+//        return input_str;
+//    }
 	
 	public void/*ArrayList<Document>*/ recommend(User u, String cat) throws IOException, ParseException, CategoryNotFoundException {
 		results.clear();

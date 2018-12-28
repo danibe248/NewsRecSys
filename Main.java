@@ -88,11 +88,11 @@ public class Main {
 		
 		count = 0;
 		for (Document d : recommendations) {
-			System.out.println(d.get("Category") + " " + d.get("Id") + " " + scores.get(count));
+			System.out.println(d.get("Category") + " " + d.get("Id") + " " + scores.get(count) + " " + d.get("Tweet"));
 			count++;
 		}
 		
-		System.out.println(u1.getBOW(ixpath, tmpath, 20));
+		System.out.println(u1.getBOW(ixpath, tmpath, 20).toString());
 		int e = 8/0;
 		
 		DataInputStream is;

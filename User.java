@@ -37,11 +37,12 @@ import org.apache.lucene.util.BytesRef;
 
 public class User {
 	private int id;
+	private int[] docCounts;
 	private ArrayList<Document> user_profile = new ArrayList<Document>();
 	
 	public User(int id, int count, int init, IndexSearcher searcher, Map<Integer,String> categories) throws ParseException, IOException {
 		this.id = id;
-		int[] docCounts = generateDocCounts(count,init); 
+		docCounts = generateDocCounts(count,init); 
 		System.out.println(Arrays.toString(docCounts));
 		
 		QueryParser parser_category = new QueryParser("Category", new StandardAnalyzer());
@@ -59,6 +60,14 @@ public class User {
 		}
 	}
 	
+	public int[] getDocCounts() {
+		return docCounts;
+	}
+
+	public void setDocCounts(int[] docCounts) {
+		this.docCounts = docCounts;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -133,7 +142,7 @@ public class User {
 		this.user_profile = user_profile;
 	}
 	
-	public String getBOW(String ixpath, String tmpath, int nterms) throws IOException {
+	public HashMap<String, SortedSet<String>> getBOW(String ixpath, String tmpath, int nterms) throws IOException {
 		FileUtils.cleanDirectory(new File(tmpath));
 		Analyzer analyzer = CustomAnalyzer.builder()
 				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
@@ -197,7 +206,7 @@ public class User {
 			}
 			bows.put(currentcat, tmpSet);
 		}
-		return bows.toString();
+		return bows;
 	}
 	
 	private int[] generateDocCounts(int count, int init) {
