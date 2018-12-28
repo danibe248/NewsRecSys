@@ -6,7 +6,7 @@ from app import app
 
 def json_request(req):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(("127.0.0.1", 22399))
+    sock.connect(("127.0.0.1", 21111))
     sock.sendall((json.dumps(req) + "\n").encode("utf8"))
     buffer = b''
     while b'\n' not in buffer:
@@ -38,18 +38,33 @@ def user0():
 			buffer = json_request(req)
 			ack = json.loads(buffer)
 			ack["id"] = req["id"]
+			ack["cat"] = req["category"]
 			return render_template("user0.html",ack=ack)
 		except ConnectionRefusedError:
 			return render_template("error.html")
 	else:
 		req = {}
-		req["action"] = "prova"
+		req["action"] = "recommend"
 		req["category"] = "allin"
 		req["id"] = int(request.args.get("id"))
 		try:
 			buffer = json_request(req)
 			ack = json.loads(buffer)
 			ack["id"] = req["id"]
+			ack["cat"] = req["category"]
 			return render_template("user0.html",ack=ack)
 		except ConnectionRefusedError:
 			return render_template("error.html")
+
+@app.route('/user_info')
+def user_info():
+	req = {}
+	req["action"] = "info"
+	req["id"] = int(request.args.get("id"))
+	try:
+		buffer = json_request(req)
+		ack = json.loads(buffer)
+		ack["id"] = req["id"]
+		return render_template("info.html",ack=ack)
+	except ConnectionRefusedError:
+		return render_template("error.html")

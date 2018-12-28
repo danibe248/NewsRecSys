@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}User {{ack["id"]}} infos{% endblock %}
+{% block body %}
+<div id="jumbo" class="jumbotron">
+	<h1>The User {{ack["id"]}}'s infos</h1>
+	<br>
+	<div id="piechart">
+		<script type="text/javascript">
+			//d3.select("#jumbo").append("span").text("Hello, world!");
+			
+			var w = 450,                        
+			h = 450,                            
+			r = 200,                            
+			color = d3.scale.category20c();     
+
+			data = {{ack["cat_counts"]|safe}};
+			
+			var vis = d3.select("#piechart")
+				.append("svg:svg")              
+				.data([data])                   
+					.attr("width", w)           
+					.attr("height", h)
+				.append("svg:g")                
+					.attr("transform", "translate(" + r + "," + r + ")")    
+
+			var arc = d3.svg.arc()              
+				.outerRadius(r);
+
+			var pie = d3.layout.pie()           
+				.value(function(d) { return d.value; });    
+
+			var arcs = vis.selectAll("g.slice")     
+				.data(pie)                          
+				.enter()                            
+					.append("svg:g")                
+						.attr("class", "slice");    
+
+				arcs.append("svg:path")
+						.attr("fill", function(d, i) { return color(i); } ) 
+						.attr("d", arc);                                    
+
+				arcs.append("svg:text")                                     
+						.attr("transform", function(d) {                    
+						
+						d.innerRadius = 0;
+						d.outerRadius = r;
+						return "translate(" + arc.centroid(d) + ")";        
+					})
+					.attr("text-anchor", "middle")                          
+					.text(function(d, i) { return data[i].label; });        
+			
+		</script>
+	</div>
+	<div class="list-group">
+		{%for element in ack["cat_counts"] %}
+		  <h2>{{element['label']}}: {{element['value']}}</h2>
+		  <p>{{element['bow']}}</p>
+		{%endfor%}
+	</div>
+</div>
+{% endblock %}
