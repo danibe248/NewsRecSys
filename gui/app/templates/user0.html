@@ -3,20 +3,20 @@
 {% block body %}
 <div id="jumbo" class="jumbotron">
   <h1>The User {{ack["id"]}}'s page</h1>
-  <p class="lead">The answer is {{ack["ack"]}}</p>
+  <!-- <p class="lead">The answer is {{ack["ack"]}}</p> -->
   <p class="lead-2">Category: {{ack["cat"]}}</p>
   <p>Click <a href="/user_info?id={{ack['id']}}">HERE</a> for user info</p>
   <div class="row">
 	<div class="col-md-12 text-center">
 		<div class="btn-group">
-			<a href="/user?update=1&id={{ack['id']}}&category=allin" type="button" class="btn btn-primary">All in</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=anime" type="button" class="btn btn-primary">Anime</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=archi" type="button" class="btn btn-primary">Architecture</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=cars" type="button" class="btn btn-primary">Cars</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=hiphop" type="button" class="btn btn-primary">Hip Hop</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=sport" type="button" class="btn btn-primary">Sport</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=tech" type="button" class="btn btn-primary">Tech</a>
-			<a href="/user?update=1&id={{ack['id']}}&category=weather" type="button" class="btn btn-primary">Weather</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=allin" type="button" class="btn btn-primary">All in</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=anime" type="button" class="btn btn-primary">Anime</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=archi" type="button" class="btn btn-primary">Architecture</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=cars" type="button" class="btn btn-primary">Cars</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=hiphop" type="button" class="btn btn-primary">Hip Hop</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=sport" type="button" class="btn btn-primary">Sport</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=tech" type="button" class="btn btn-primary">Tech</a>
+			<a href="/user?update=cat&id={{ack['id']}}&category=weather" type="button" class="btn btn-primary">Weather</a>
 		</div> 
 	</div>
   </div>
@@ -25,7 +25,7 @@
   <div class="list-group">
 	{%for element in ack["lista"] %}
 	  <!-- <a onclick="getladata()" class="list-group-item">{{element}}</a> -->
-	  <a href="/user?update=1&id={{ack['id']}}" class="list-group-item"><b>{{element['category']}}</b> {{element['tweet']}}</a>
+	  <a href="/user?update=item&id={{ack['id']}}&category={{ack['cat']}}&clicked={{element['itemid']}}" class="list-group-item"><b>{{element['category']}}</b> {{element['tweet']}}</a>
 	{%endfor%}
   </div>
 </div>

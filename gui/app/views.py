@@ -29,9 +29,23 @@ def index():
 
 @app.route('/user')
 def user0():
-	if request.args.get("update") != None:
+	if request.args.get("update") == "item":
 		req = {}
-		req["action"] = "update"
+		req["action"] = "itemupdate"
+		req["category"] = str(request.args.get("category"))
+		req["id"] = int(request.args.get("id"))
+		req["itemid"] = int(request.args.get("clicked"))
+		try:
+			buffer = json_request(req)
+			ack = json.loads(buffer)
+			ack["id"] = req["id"]
+			ack["cat"] = req["category"]
+			return render_template("user0.html",ack=ack)
+		except ConnectionRefusedError:
+			return render_template("error.html")
+	elif request.args.get("update") == "cat":
+		req = {}
+		req["action"] = "catupdate"
 		req["category"] = str(request.args.get("category"))
 		req["id"] = int(request.args.get("id"))
 		try:
