@@ -134,8 +134,9 @@ public class User {
 		}
 	}
 	
-	public void upUpdate(Document d) {
+	public void upUpdate(Document d, Map<String,Integer> map) {
 		this.user_profile.add(d);		
+		this.docCounts[map.get(d.get("Category"))] = this.docCounts[map.get(d.get("Category"))]+1;
 	}
 	
 	public void setUser_profile(ArrayList<Document> user_profile) {
@@ -183,14 +184,14 @@ public class User {
 //			TopTerms tt = new TopTerms(20);
 			try {
 				TermsEnum it = reader.getTermVector(id_doc, "Tweet").iterator();
-				System.out.println(cat);
+//				System.out.println(cat);
 				BytesRef term = null;
 				while ((term = it.next()) != null) {
 					float idf = sim.idf(reader_collection.docFreq(new Term("Tweet", term.utf8ToString())),reader_collection.numDocs());
 					float tf = sim.tf(it.totalTermFreq());
 					TermTFIDF newterm = new TermTFIDF(tf * idf, term.utf8ToString());
 					categories.get(cat).add(newterm);
-					System.out.println(newterm.term + ":" + newterm.tfidf);
+//					System.out.println(newterm.term + ":" + newterm.tfidf);
 				}
 			} catch(Exception e) {
 				System.out.println("Eccezione sulla creazione bow");
