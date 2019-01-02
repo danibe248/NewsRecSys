@@ -39,9 +39,11 @@ public class User {
 	private int id;
 	private int[] docCounts;
 	private ArrayList<Document> user_profile = new ArrayList<Document>();
+	private Analyzer analyzer;
 	
-	public User(int id, int count, int init, IndexSearcher searcher, Map<Integer,String> categories) throws ParseException, IOException {
+	public User(int id, int count, int init, IndexSearcher searcher, Map<Integer,String> categories, Analyzer ana) throws ParseException, IOException {
 		this.id = id;
+		this.analyzer = ana;
 		docCounts = generateDocCounts(count,init); 
 		System.out.println(Arrays.toString(docCounts));
 		
@@ -60,6 +62,14 @@ public class User {
 		}
 	}
 	
+	public Analyzer getAnalyzer() {
+		return analyzer;
+	}
+
+	public void setAnalyzer(Analyzer analyzer) {
+		this.analyzer = analyzer;
+	}
+
 	public int[] getDocCounts() {
 		return docCounts;
 	}
@@ -145,14 +155,14 @@ public class User {
 	
 	public HashMap<String, SortedSet<String>> getBOW(String ixpath, String tmpath, int nterms) throws IOException {
 		FileUtils.cleanDirectory(new File(tmpath));
-		Analyzer analyzer = CustomAnalyzer.builder()
-				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
-				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
-				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
-	            .withTokenizer("whitespace")
-	            .addTokenFilter("lowercase")
-	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
-	            .build();
+//		Analyzer analyzer = CustomAnalyzer.builder()
+//				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+//	            .withTokenizer("whitespace")
+//	            .addTokenFilter("lowercase")
+//	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+//	            .build();
 		
 		Path ipath = Paths.get(tmpath);
 		Directory directory = FSDirectory.open(ipath);

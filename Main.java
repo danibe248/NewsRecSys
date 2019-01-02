@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermsEnum;
@@ -30,11 +32,19 @@ public class Main {
 		categories.put(4, "sport");
 		categories.put(5, "tech");
 		categories.put(6, "weather");
+		Analyzer analyzer = CustomAnalyzer.builder()
+				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+	            .withTokenizer("whitespace")
+	            .addTokenFilter("lowercase")
+	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+	            .build();
 		
 		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
 		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
 		String tmpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix_tmp";
-		Indexer creator = new Indexer(datapath, ixpath);
+		Indexer creator = new Indexer(datapath, ixpath, analyzer);
 		IndexReader reader = creator.createIndex();
 		IndexSearcher searcher = new IndexSearcher(reader);
 		System.out.println(searcher.doc(0).getField("Id"));
@@ -46,16 +56,16 @@ public class Main {
 			System.out.println(term.utf8ToString());
 		}
  
-		User u0 = new User(0,7,30,searcher,categories);
-		User u1 = new User(1,7,50,searcher,categories);
-		User u2 = new User(2,7,30,searcher,categories);
-		User u3 = new User(3,7,30,searcher,categories);
-		User u4 = new User(4,7,30,searcher,categories);
-		User u5 = new User(5,7,30,searcher,categories);
-		User u6 = new User(6,7,30,searcher,categories);
-		User u7 = new User(7,7,30,searcher,categories);
-		User u8 = new User(8,7,30,searcher,categories);
-		User u9 = new User(9,7,30,searcher,categories);
+		User u0 = new User(0,7,30,searcher,categories, analyzer);
+		User u1 = new User(1,7,50,searcher,categories, analyzer);
+		User u2 = new User(2,7,30,searcher,categories, analyzer);
+		User u3 = new User(3,7,30,searcher,categories, analyzer);
+		User u4 = new User(4,7,30,searcher,categories, analyzer);
+		User u5 = new User(5,7,30,searcher,categories, analyzer);
+		User u6 = new User(6,7,30,searcher,categories, analyzer);
+		User u7 = new User(7,7,30,searcher,categories, analyzer);
+		User u8 = new User(8,7,30,searcher,categories, analyzer);
+		User u9 = new User(9,7,30,searcher,categories, analyzer);
 		ArrayList<Document> up1 = u1.getUser_profile("allin");
 		System.out.println(up1.size());
 		for (Document d : up1) {
@@ -67,7 +77,7 @@ public class Main {
 		System.out.println("#        Recommendations         #");
 		System.out.println("##################################");
 		
-		Recommender engine = new Recommender(reader);
+		Recommender engine = new Recommender(reader, analyzer);
 		engine.recommend(u1, "hiphop;anime");
 		ArrayList<Document> recommendations = engine.getResults();
 		ArrayList<Float> scores = engine.getScores();

@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.TermsEnum;
@@ -33,19 +35,28 @@ public class Main2 {
 		categories.put(5, "tech");
 		categories.put(6, "weather");
 		Map<String,Integer> inv_categories = categories.entrySet().stream().collect(Collectors.toMap(Entry::getValue, Entry::getKey));
+		Analyzer analyzer = CustomAnalyzer.builder()
+				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+	            .withTokenizer("whitespace")
+	            .addTokenFilter("lowercase")
+	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+	            .build();
+		
 		
 		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
 		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
 		String tmpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix_tmp";
-		Indexer creator = new Indexer(datapath, ixpath);
+		Indexer creator = new Indexer(datapath, ixpath, analyzer);
 		IndexReader reader = creator.createIndex();
 		IndexSearcher searcher = new IndexSearcher(reader);
 		
 		ArrayList<User> users = new ArrayList<User>();
 		for (int i = 0; i < 10; i++) {
-			users.add(new User(i,7,50,searcher,categories));
+			users.add(new User(i,7,50,searcher,categories, analyzer));
 		}
-		Recommender engine = new Recommender(reader);
+		Recommender engine = new Recommender(reader, analyzer);
 		
 		DataInputStream is;
 		DataOutputStream os;

@@ -27,10 +27,20 @@ public class Indexer {
 	private String datapath;
 	private String indexpath;
 	private ArrayList<Document> docs = new ArrayList<Document>();
+	private Analyzer analyzer;
 	
-	public Indexer(String datapath, String indexpath) {
+	public Analyzer getAnalyzer() {
+		return analyzer;
+	}
+
+	public void setAnalyzer(Analyzer analyzer) {
+		this.analyzer = analyzer;
+	}
+
+	public Indexer(String datapath, String indexpath, Analyzer ana) {
 		this.datapath = datapath;
 		this.indexpath = indexpath;
+		this.analyzer = ana;
 	}
 	
 	public String getDatapath() {
@@ -110,14 +120,14 @@ public class Indexer {
 			}
 		}
 		
-		Analyzer analyzer = CustomAnalyzer.builder()
-	            .addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
-				//.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
-				//.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
-	            .withTokenizer("whitespace")
-	            .addTokenFilter("lowercase")
-	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
-	            .build();
+//		Analyzer analyzer = CustomAnalyzer.builder()
+//	            //.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+//	            .withTokenizer("whitespace")
+//	            .addTokenFilter("lowercase")
+//	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+//	            .build();
 		
 		Path ipath = Paths.get(this.indexpath);
 		Directory directory = FSDirectory.open(ipath);

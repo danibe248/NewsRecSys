@@ -22,6 +22,7 @@ public class Recommender {
 	private IndexReader reader;
     private ArrayList<Document> results = new ArrayList<Document>();
     private ArrayList<Float> scores = new ArrayList<Float>(); 
+    private Analyzer analyzer;
 	
 	public ArrayList<Document> getResults() {
 		return results;
@@ -43,9 +44,10 @@ public class Recommender {
 		return reader;
 	}
 
-	public Recommender(IndexReader reader) {
+	public Recommender(IndexReader reader, Analyzer ana) {
 		super();
 		this.reader = reader;
+		this.analyzer = ana;
 	}
 
 	public void setReader(IndexReader reader) {
@@ -67,14 +69,14 @@ public class Recommender {
 	public void/*ArrayList<Document>*/ recommend(User u, String cat) throws IOException, ParseException, CategoryNotFoundException {
 		results.clear();
 		scores.clear();
-		Analyzer analyzer = CustomAnalyzer.builder()
-				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
-				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
-				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
-	            .withTokenizer("whitespace")
-	            .addTokenFilter("lowercase")
-	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
-	            .build();
+//		Analyzer analyzer = CustomAnalyzer.builder()
+//				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+//	            .withTokenizer("whitespace")
+//	            .addTokenFilter("lowercase")
+//	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+//	            .build();
 		
 		QueryParser parser_tweet = new QueryParser("Tweet", analyzer);
 		QueryParser parser_id = new QueryParser("Id", new StandardAnalyzer());
