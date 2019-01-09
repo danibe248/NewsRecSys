@@ -66,7 +66,7 @@ public class Recommender {
 //        return input_str;
 //    }
 	
-	public void/*ArrayList<Document>*/ recommend(User u, String cat) throws IOException, ParseException, CategoryNotFoundException {
+	public void/*ArrayList<Document>*/ recommend(User u, String cat, int rt) throws IOException, ParseException, CategoryNotFoundException {
 		results.clear();
 		scores.clear();
 //		Analyzer analyzer = CustomAnalyzer.builder()
@@ -104,9 +104,11 @@ public class Recommender {
         }
         
         Query qt = parser_tweet.parse(str);
+        Query christo = parser_tweet.parse("Christmas");
+        finalQueryBuilder.add(christo,Occur.MUST_NOT);
         finalQueryBuilder.add(qt,Occur.SHOULD);
         BooleanQuery finalQuery = finalQueryBuilder.build();
-        TopDocs topdocs = searcher.search(finalQuery, 10);
+        TopDocs topdocs = searcher.search(finalQuery, rt);
         ScoreDoc[] resultsList = topdocs.scoreDocs;
         
         

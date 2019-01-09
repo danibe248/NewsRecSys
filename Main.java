@@ -78,7 +78,7 @@ public class Main {
 		System.out.println("##################################");
 		
 		Recommender engine = new Recommender(reader, analyzer);
-		engine.recommend(u1, "hiphop;anime");
+		engine.recommend(u1, "hiphop;anime", 10);
 		ArrayList<Document> recommendations = engine.getResults();
 		ArrayList<Float> scores = engine.getScores();
 		
@@ -92,7 +92,7 @@ public class Main {
 		System.out.println("#        Recommendations         #");
 		System.out.println("##################################");
 		
-		engine.recommend(u1, "allin");
+		engine.recommend(u1, "allin", 10);
 		recommendations = engine.getResults();
 		scores = engine.getScores();
 		

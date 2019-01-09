@@ -54,7 +54,7 @@ public class Main2 {
 		
 		ArrayList<User> users = new ArrayList<User>();
 		for (int i = 0; i < 10; i++) {
-			users.add(new User(i,7,50,searcher,categories, analyzer));
+			users.add(new User(i,7,15,searcher,categories, analyzer));
 		}
 		Recommender engine = new Recommender(reader, analyzer);
 		
@@ -83,7 +83,7 @@ public class Main2 {
 				int req_id = json.getInt("id");
 				String req_cat = json.getString("category");
 				
-				engine.recommend(users.get(req_id), req_cat);
+				engine.recommend(users.get(req_id), req_cat, 10);
 				recommendations = engine.getResults();
 //				String[] recvec = new String[10];
 				int count = 0;
@@ -108,7 +108,7 @@ public class Main2 {
 				int req_item = json.getInt("itemid");
 				String req_cat = json.getString("category");
 				users.get(req_id).upUpdate(recommendations.get(req_item),inv_categories);
-				engine.recommend(users.get(req_id), req_cat);
+				engine.recommend(users.get(req_id), req_cat, 10);
 				recommendations = engine.getResults();
 				int count = 0;
 				JSONObject[] recvec = new JSONObject[10];
