@@ -135,4 +135,74 @@ public class Recommender {
 */        	
 //        return results;		
 	}	
+	
+	public void/*ArrayList<Document>*/ recommend(Puppet u, String cat, int rt) throws IOException, ParseException, CategoryNotFoundException {
+		results.clear();
+		scores.clear();
+//		Analyzer analyzer = CustomAnalyzer.builder()
+//				//.addCharFilter("patternreplace","pattern","\\p{Punct}","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)","replacement"," ")
+//				.addCharFilter("patternreplace", "pattern","[^a-zA-Z ]","replacement"," ")
+//	            .withTokenizer("whitespace")
+//	            .addTokenFilter("lowercase")
+//	            .addTokenFilter("stop", "ignoreCase", "false", "words", "stoplist.txt", "format", "wordset")
+//	            .build();
+		
+		QueryParser parser_tweet = new QueryParser("Tweet", analyzer);
+		QueryParser parser_id = new QueryParser("Id", new StandardAnalyzer());
+		IndexSearcher searcher = new IndexSearcher(reader);
+		searcher.setSimilarity(new ClassicSimilarity());
+		ArrayList<Document> documents = u.getUser_profile(cat);
+		
+		String str = ""; 
+		  
+	        // ArrayList to Array Conversion 
+        for (int j = 0; j < documents.size(); j++) {
+            // Assign each value to String array 
+            str = str + " " + documents.get(j).get("Tweet");
+        } 
+        
+        str = str.replaceAll("((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)", " ");
+        str = str.replaceAll("[^a-zA-Z ]", " ");
+  
+        Iterator<Document> up_documents = documents.iterator();
+        Builder finalQueryBuilder = new BooleanQuery.Builder();
+        while (up_documents.hasNext()) {
+        	Document current_doc = up_documents.next();
+        	Query current_q = parser_id.parse(current_doc.get("Id"));
+        	finalQueryBuilder.add(current_q,Occur.MUST_NOT);
+        }
+        
+        Query qt = parser_tweet.parse(str);
+        Query christo = parser_tweet.parse("Christmas");
+        finalQueryBuilder.add(christo,Occur.MUST_NOT);
+        finalQueryBuilder.add(qt,Occur.SHOULD);
+        BooleanQuery finalQuery = finalQueryBuilder.build();
+        TopDocs topdocs = searcher.search(finalQuery, rt);
+        ScoreDoc[] resultsList = topdocs.scoreDocs;
+        
+        
+        for(int i = 0; i<resultsList.length; i++){
+        	results.add(searcher.doc(resultsList[i].doc));
+    		scores.add(resultsList[i].score);
+        }
+/*        
+        for(int i = 0; i<resultsList.length; i++){
+        	String current = searcher.doc(resultsList[i].doc).get("Id");
+        	Iterator<Document> up_documents = documents.iterator();
+        	boolean flag = false;
+        	while (up_documents.hasNext() && !flag) {
+        		Document upd = up_documents.next();
+        		if (current.equals(upd.get("Id"))) {
+        			flag = true;
+        		}
+        	}
+        	if (!flag) {
+        		results.add(searcher.doc(resultsList[i].doc));
+        		scores.add(resultsList[i].score);
+        	}
+        }
+*/        	
+//        return results;		
+	}	
 }

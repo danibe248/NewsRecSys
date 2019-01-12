@@ -45,9 +45,9 @@ public class Main2 {
 	            .build();
 		
 		
-		String datapath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
-		String ixpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
-		String tmpath = "/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix_tmp";
+		String datapath = args[0];//"/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/data/tweets";
+		String ixpath = args[1];//"/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix";
+		String tmpath = args[2];//"/home/ld/daniele/UniMiB/Magistrale/IR/2019/lab/Progetto19/ix_tmp";
 		Indexer creator = new Indexer(datapath, ixpath, analyzer);
 		IndexReader reader = creator.createIndex();
 		IndexSearcher searcher = new IndexSearcher(reader);
