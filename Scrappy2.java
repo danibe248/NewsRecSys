@@ -16,8 +16,8 @@ public class Scrappy2 {
 	public static void main(String[] args) throws TwitterException, IOException{
 
 		Twitter twitter = TwitterFactory.getSingleton();
-		twitter.setOAuthConsumer("4AN4RwecyFqXyAYdF6aB1wsZ7", "agrWdgv8ObHLi106znh4vCr448P4akHTd4KrOY6uTR2AebmArx");
-		twitter.setOAuthAccessToken(new AccessToken("702181802253881344-GjAtl4ZkdHZbDLtdsyXVjDvmwuawxNr","lLGiQZONBEVsHfSV3zom1CWSMFbybuhSxwCPKVpjifJN9"));
+		twitter.setOAuthConsumer("*************************", "**************************************************");
+		twitter.setOAuthAccessToken(new AccessToken("*************************-*************************","*************************"));
 
 //		Query bbcsport = new Query("from:BBCSport -filter:retweets since:2018-12-21");
 //		Query techradar = new Query("from:techradar -filter:retweets since:2018-12-21");
